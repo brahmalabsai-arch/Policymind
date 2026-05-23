@@ -1,9 +1,11 @@
-# Cloud-friendly pins.
-# - torch is intentionally NOT pinned: sentence-transformers will pull a wheel
-#   that matches the host Python version. Hard-pinning torch causes
-#   "no matching distribution" errors on Streamlit Cloud when wheel availability shifts.
-# - Lower bounds keep us on known-good APIs; no upper bounds so pip can resolve.
+# Cloud-friendly. Critical: torch must come from the CPU-only PyTorch index,
+# NOT PyPI — PyPI's torch wheel pulls ~2GB of CUDA libraries (nvidia-cufft,
+# cuda-toolkit, etc.) that break free-tier builds with network timeouts.
+# Streamlit Cloud has no GPU, so CPU torch is what we want anyway.
 
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch
 pdfplumber>=0.11.0
 sentence-transformers>=3.0.0,<4
 chromadb>=0.5.0,<0.7
@@ -12,4 +14,3 @@ groq>=0.13.0
 streamlit>=1.40.0
 python-dotenv>=1.0.0
 gdown>=5.0.0
-numpy<2
