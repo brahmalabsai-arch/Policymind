@@ -92,9 +92,6 @@ Open http://localhost:8501 and paste your free Groq API key
 
 ## Notes
 
-- This chatbot serves a document marked "Restricted for Internal Use Only."
-  Do not commit the PDF. Do not deploy the URL publicly outside your org's intended users.
-- Each colleague enters their own free Groq API key in the sidebar — there is no
+- Each user enters their own free Groq API key in the sidebar — there is no
   shared key, so usage costs nothing and rate limits are per-user.
-- Switching the repo from private to public later is safe IF you have never committed
-  the PDF or any `.env` / `secrets.toml` files. The `.gitignore` here prevents that.
+
