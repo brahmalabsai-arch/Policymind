@@ -61,12 +61,23 @@ def resolve_pdf() -> Path:
             "variable (local)."
         )
     gid = _is_gdrive(url)
-    if gid:
-        _download_gdrive(gid, PDF_CACHE_PATH)
-    else:
-        _download_http(url, PDF_CACHE_PATH)
+    try:
+        if gid:
+            _download_gdrive(gid, PDF_CACHE_PATH)
+        else:
+            _download_http(url, PDF_CACHE_PATH)
+    except Exception:
+        # Never propagate the URL — it would surface in Streamlit's st.error()
+        # and leak the secret to end users.
+        raise RuntimeError(
+            "PDF download failed. Check the PDF_URL secret in Streamlit Cloud "
+            "and confirm the source link is reachable."
+        ) from None
     if not PDF_CACHE_PATH.exists() or PDF_CACHE_PATH.stat().st_size < 1000:
-        raise RuntimeError(f"PDF download failed. PDF_URL={url}")
+        raise RuntimeError(
+            "PDF download produced an empty or missing file. "
+            "Check the PDF_URL secret in Streamlit Cloud."
+        )
     return PDF_CACHE_PATH
 
 
